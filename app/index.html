@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analysis App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Sentiment Analysis App</h1>
+        <label for="text">Enter Text:</label>
+        <input type="text" id="text" placeholder="Type your text here...">
+        <button onclick="analyzeSentiment()">Analyze Sentiment</button>
+        <p id="result">Predicted Sentiment:</p>
+    </div>
+</body>
+
+<script>
+    async function analyzeSentiment() {
+        const text = document.getElementById("text").value;
+        const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ text: text })
+        });
+
+        const result = await response.json();
+        const resultElement = document.getElementById("result");
+        
+        // Update the result text and color based on sentiment
+        resultElement.textContent = "Predicted Sentiment: " + result.sentiment;
+        if (result.sentiment === "Positive") {
+            resultElement.style.color = "#28a745";  // Green for positive
+        } else {
+            resultElement.style.color = "#dc3545";  // Red for negative
+        }
+    }
+</script>
+</html>
